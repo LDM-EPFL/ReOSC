@@ -9,6 +9,7 @@
 #import "OSCController.h"
 #import <VVOSC/VVOSC.h>
 #import "AppDelegate.h"
+#import "AppCommon.h"
 
 @implementation OSCController
 
@@ -31,45 +32,16 @@
     // Base path where recordings live
     NSString* basePath = [NSString stringWithFormat:@"%@/Desktop/ReduOSC",NSHomeDirectory()];
     [[NSUserDefaults standardUserDefaults] setValue:basePath forKey:@"recordingBasepath"];
+    
+    [[AppCommon sharedAppCommon] setDropLoadProgress:_dropLoadProgress];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_loopPlayback"];    
 
 }
 
-- (IBAction)button_playBack:(id)sender {
 
-    // Grab files
-
-    NSString *path;
-    path = [[NSUserDefaults standardUserDefaults] valueForKey:@"inputPath"];
-    NSLog(@"Trying to read: %@",[[NSUserDefaults standardUserDefaults] valueForKey:@"inputPath"]);
-    
-    NSArray *dirFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSUserDefaults standardUserDefaults] valueForKey:@"inputPath"] error:nil];
-    NSArray *pcdFiles = [dirFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.log'"]];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM/dd/yyyy HH:mm:ss.SSS"];
-    
-    //Bounce if there are no files
-    if ([pcdFiles count] == 0){
-        NSLog(@"Nothing to do!");
-        return;
-    }else{
-        for (NSString *file in pcdFiles) {
-            
-            
-            NSString *fileToRead=[[NSString alloc] initWithFormat:@"%@/%@",path,file];
-            
-            NSData *data = [NSData dataWithContentsOfFile:fileToRead];
-            
-            NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-            for(NSString* logLines in array){
-                NSLog(@"%@",logLines);
-            }
-            
-            
-        }
-    }
-    
-    
-}
 
 -(void)updateLoop{
     
@@ -77,11 +49,88 @@
     [self setupOSCInput];
     
     [self setupOSCOutput];
-    //[self sendToOSC];
     
     [self flushRecordBuffer];
     
-    
+    [self playbackRecording];
+}
+
+
+-(void)playbackRecording{
+    if([[AppCommon sharedAppCommon] playbackAvailable]){
+        
+        // Play
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
+            
+            // Turn off listen
+            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
+            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
+            
+            
+            // If not paused
+            if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
+               
+                
+                // Get a message
+                NSArray* logEntry = [[AppCommon sharedAppCommon] input_oscFromLog][messageCounter];
+                
+                
+                OSCMessage* newMessage = [OSCMessage createWithAddress:logEntry[1]];
+                
+                int counter=0;
+                for(NSString* messageComponant in logEntry){
+                    if(counter > 1){
+                        
+                        NSString* oscMessageType=[messageComponant componentsSeparatedByString:@":"][0];
+                        NSString* oscMessageContent=[messageComponant componentsSeparatedByString:@":"][1];
+                        
+                        // Float
+                        if([oscMessageType isEqualToString:@"f"]){
+                            [newMessage addFloat:[oscMessageContent floatValue]];
+                            
+                        // Integer
+                        }else  if([oscMessageType isEqualToString:@"i"]){
+                            [newMessage addInt:(int)[oscMessageContent integerValue]];
+                        
+                        // Stringf
+                        }else  if([oscMessageType isEqualToString:@"s"]){
+                            [newMessage addString:oscMessageContent];
+
+                        
+                        }
+                        
+                    }
+                    counter++;
+                }
+                
+                // Actually send by spoofing a recieve from listener
+                [self receivedOSCMessage:newMessage];
+                
+                
+                messageCounter++;
+                
+                // If we are out of range
+                if (messageCounter >= [[[AppCommon sharedAppCommon] input_oscFromLog] count] ) {
+                    
+                   // Are we looping?
+                   if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
+                       messageCounter=0;
+                   
+                   // Not looping
+                   }else{
+                       [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
+                       [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
+                       messageCounter=0;
+                   }
+                }
+            }
+            
+        // Stop
+        }else{
+            // If stopped, reset counter
+            messageCounter=0;
+        }
+    }
 }
 
 

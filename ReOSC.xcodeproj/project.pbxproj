@@ -7,29 +7,58 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4946DDDA17D9FEE900B913F8 /* AppCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4946DDD717D9FEE900B913F8 /* AppCommon.m */; };
+		4946DDDB17D9FEE900B913F8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4946DDD917D9FEE900B913F8 /* AppDelegate.m */; };
+		4946DDE217D9FEF300B913F8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4946DDDC17D9FEF300B913F8 /* main.m */; };
+		4946DDE317D9FEF300B913F8 /* OSCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4946DDDE17D9FEF300B913F8 /* OSCController.m */; };
+		4946DDE817D9FEFF00B913F8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4946DDE617D9FEFF00B913F8 /* MainMenu.xib */; };
+		4946DDF017D9FF8500B913F8 /* VVBasics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4946DDEA17D9FF1700B913F8 /* VVBasics.framework */; };
+		4946DDF117D9FF8500B913F8 /* VVMIDI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4946DDEB17D9FF1700B913F8 /* VVMIDI.framework */; };
+		4946DDF217D9FF8500B913F8 /* VVOSC.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4946DDEC17D9FF1700B913F8 /* VVOSC.framework */; };
+		4946DDF317DA00D200B913F8 /* VVBasics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4946DDEA17D9FF1700B913F8 /* VVBasics.framework */; };
+		4946DDF417DA00D200B913F8 /* VVMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4946DDEB17D9FF1700B913F8 /* VVMIDI.framework */; };
+		4946DDF517DA00D200B913F8 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4946DDEC17D9FF1700B913F8 /* VVOSC.framework */; };
+		495FDA5017DA3F3500922E16 /* TimelineScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */; };
 		49A6846F17D8C2C00075AAD9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A6846E17D8C2C00075AAD9 /* Cocoa.framework */; };
-		49A6847917D8C2C00075AAD9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 49A6847717D8C2C00075AAD9 /* InfoPlist.strings */; };
-		49A6847B17D8C2C00075AAD9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A6847A17D8C2C00075AAD9 /* main.m */; };
-		49A6847F17D8C2C00075AAD9 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 49A6847D17D8C2C00075AAD9 /* Credits.rtf */; };
-		49A6848217D8C2C00075AAD9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A6848117D8C2C00075AAD9 /* AppDelegate.m */; };
-		49A6848517D8C2C00075AAD9 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49A6848317D8C2C00075AAD9 /* MainMenu.xib */; };
-		49A6848817D8C2C00075AAD9 /* ReduOSC.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 49A6848617D8C2C00075AAD9 /* ReduOSC.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		49A6849717D8C6210075AAD9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4946DDF017D9FF8500B913F8 /* VVBasics.framework in CopyFiles */,
+				4946DDF117D9FF8500B913F8 /* VVMIDI.framework in CopyFiles */,
+				4946DDF217D9FF8500B913F8 /* VVOSC.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		49A6846B17D8C2C00075AAD9 /* ReduOSC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReduOSC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4946DDD617D9FEE900B913F8 /* AppCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppCommon.h; path = ReOSC/AppCommon.h; sourceTree = SOURCE_ROOT; };
+		4946DDD717D9FEE900B913F8 /* AppCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppCommon.m; path = ReOSC/AppCommon.m; sourceTree = SOURCE_ROOT; };
+		4946DDD817D9FEE900B913F8 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ReOSC/AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		4946DDD917D9FEE900B913F8 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ReOSC/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		4946DDDC17D9FEF300B913F8 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ReOSC/main.m; sourceTree = SOURCE_ROOT; };
+		4946DDDD17D9FEF300B913F8 /* OSCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSCController.h; path = ReOSC/OSCController.h; sourceTree = SOURCE_ROOT; };
+		4946DDDE17D9FEF300B913F8 /* OSCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OSCController.m; path = ReOSC/OSCController.m; sourceTree = SOURCE_ROOT; };
+		4946DDE017D9FEF300B913F8 /* ReOSC-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "ReOSC-Info.plist"; path = "ReOSC/ReOSC-Info.plist"; sourceTree = SOURCE_ROOT; };
+		4946DDE117D9FEF300B913F8 /* ReOSC-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ReOSC-Prefix.pch"; path = "ReOSC/ReOSC-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		4946DDE717D9FEFF00B913F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = ReOSC/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
+		4946DDEA17D9FF1700B913F8 /* VVBasics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVBasics.framework; path = ReOSC/Frameworks/VVBasics.framework; sourceTree = "<group>"; };
+		4946DDEB17D9FF1700B913F8 /* VVMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVMIDI.framework; path = ReOSC/Frameworks/VVMIDI.framework; sourceTree = "<group>"; };
+		4946DDEC17D9FF1700B913F8 /* VVOSC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VVOSC.framework; path = ReOSC/Frameworks/VVOSC.framework; sourceTree = "<group>"; };
+		4946DDF617DA00FF00B913F8 /* CWLSynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CWLSynthesizeSingleton.h; path = ReOSC/CWLSynthesizeSingleton.h; sourceTree = SOURCE_ROOT; };
+		495FDA4E17DA3F3500922E16 /* TimelineScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelineScrollView.h; path = ReOSC/TimelineScrollView.h; sourceTree = SOURCE_ROOT; };
+		495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimelineScrollView.m; path = ReOSC/TimelineScrollView.m; sourceTree = SOURCE_ROOT; };
+		49A6846B17D8C2C00075AAD9 /* ReOSC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReOSC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A6846E17D8C2C00075AAD9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		49A6847117D8C2C00075AAD9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		49A6847217D8C2C00075AAD9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		49A6847317D8C2C00075AAD9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		49A6847617D8C2C00075AAD9 /* ReduOSC-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ReduOSC-Info.plist"; sourceTree = "<group>"; };
-		49A6847817D8C2C00075AAD9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		49A6847A17D8C2C00075AAD9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		49A6847C17D8C2C00075AAD9 /* ReduOSC-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReduOSC-Prefix.pch"; sourceTree = "<group>"; };
-		49A6847E17D8C2C00075AAD9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		49A6848017D8C2C00075AAD9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		49A6848117D8C2C00075AAD9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		49A6848417D8C2C00075AAD9 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		49A6848717D8C2C00075AAD9 /* ReduOSC.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ReduOSC.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -39,6 +68,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				49A6846F17D8C2C00075AAD9 /* Cocoa.framework in Frameworks */,
+				4946DDF317DA00D200B913F8 /* VVBasics.framework in Frameworks */,
+				4946DDF417DA00D200B913F8 /* VVMIDI.framework in Frameworks */,
+				4946DDF517DA00D200B913F8 /* VVOSC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,7 +80,7 @@
 		49A6846217D8C2C00075AAD9 = {
 			isa = PBXGroup;
 			children = (
-				49A6847417D8C2C00075AAD9 /* ReduOSC */,
+				49A6847417D8C2C00075AAD9 /* ReOSC */,
 				49A6846D17D8C2C00075AAD9 /* Frameworks */,
 				49A6846C17D8C2C00075AAD9 /* Products */,
 			);
@@ -57,7 +89,7 @@
 		49A6846C17D8C2C00075AAD9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				49A6846B17D8C2C00075AAD9 /* ReduOSC.app */,
+				49A6846B17D8C2C00075AAD9 /* ReOSC.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,6 +97,9 @@
 		49A6846D17D8C2C00075AAD9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4946DDEA17D9FF1700B913F8 /* VVBasics.framework */,
+				4946DDEB17D9FF1700B913F8 /* VVMIDI.framework */,
+				4946DDEC17D9FF1700B913F8 /* VVOSC.framework */,
 				49A6846E17D8C2C00075AAD9 /* Cocoa.framework */,
 				49A6847017D8C2C00075AAD9 /* Other Frameworks */,
 			);
@@ -81,26 +116,33 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		49A6847417D8C2C00075AAD9 /* ReduOSC */ = {
+		49A6847417D8C2C00075AAD9 /* ReOSC */ = {
 			isa = PBXGroup;
 			children = (
-				49A6848017D8C2C00075AAD9 /* AppDelegate.h */,
-				49A6848117D8C2C00075AAD9 /* AppDelegate.m */,
-				49A6848317D8C2C00075AAD9 /* MainMenu.xib */,
+				4946DDE617D9FEFF00B913F8 /* MainMenu.xib */,
+				495FDA4E17DA3F3500922E16 /* TimelineScrollView.h */,
+				495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */,
+				4946DDDD17D9FEF300B913F8 /* OSCController.h */,
+				4946DDDE17D9FEF300B913F8 /* OSCController.m */,
+				4946DDD617D9FEE900B913F8 /* AppCommon.h */,
+				4946DDD717D9FEE900B913F8 /* AppCommon.m */,
+				4946DDD817D9FEE900B913F8 /* AppDelegate.h */,
+				4946DDD917D9FEE900B913F8 /* AppDelegate.m */,
 				49A6848617D8C2C00075AAD9 /* ReduOSC.xcdatamodeld */,
 				49A6847517D8C2C00075AAD9 /* Supporting Files */,
 			);
+			name = ReOSC;
 			path = ReduOSC;
 			sourceTree = "<group>";
 		};
 		49A6847517D8C2C00075AAD9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				49A6847617D8C2C00075AAD9 /* ReduOSC-Info.plist */,
-				49A6847717D8C2C00075AAD9 /* InfoPlist.strings */,
-				49A6847A17D8C2C00075AAD9 /* main.m */,
-				49A6847C17D8C2C00075AAD9 /* ReduOSC-Prefix.pch */,
-				49A6847D17D8C2C00075AAD9 /* Credits.rtf */,
+				4946DDF617DA00FF00B913F8 /* CWLSynthesizeSingleton.h */,
+				4946DDDC17D9FEF300B913F8 /* main.m */,
+				4946DDDF17D9FEF300B913F8 /* ReduOSC.xcdatamodeld */,
+				4946DDE017D9FEF300B913F8 /* ReOSC-Info.plist */,
+				4946DDE117D9FEF300B913F8 /* ReOSC-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -108,21 +150,22 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		49A6846A17D8C2C00075AAD9 /* ReduOSC */ = {
+		49A6846A17D8C2C00075AAD9 /* ReOSC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 49A6848B17D8C2C00075AAD9 /* Build configuration list for PBXNativeTarget "ReduOSC" */;
+			buildConfigurationList = 49A6848B17D8C2C00075AAD9 /* Build configuration list for PBXNativeTarget "ReOSC" */;
 			buildPhases = (
 				49A6846717D8C2C00075AAD9 /* Sources */,
 				49A6846817D8C2C00075AAD9 /* Frameworks */,
 				49A6846917D8C2C00075AAD9 /* Resources */,
+				49A6849717D8C6210075AAD9 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = ReduOSC;
+			name = ReOSC;
 			productName = ReduOSC;
-			productReference = 49A6846B17D8C2C00075AAD9 /* ReduOSC.app */;
+			productReference = 49A6846B17D8C2C00075AAD9 /* ReOSC.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -134,7 +177,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "FERAL RESEARCH COALITION";
 			};
-			buildConfigurationList = 49A6846617D8C2C00075AAD9 /* Build configuration list for PBXProject "ReduOSC" */;
+			buildConfigurationList = 49A6846617D8C2C00075AAD9 /* Build configuration list for PBXProject "ReOSC" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -146,7 +189,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				49A6846A17D8C2C00075AAD9 /* ReduOSC */,
+				49A6846A17D8C2C00075AAD9 /* ReOSC */,
 			);
 		};
 /* End PBXProject section */
@@ -156,9 +199,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49A6847917D8C2C00075AAD9 /* InfoPlist.strings in Resources */,
-				49A6847F17D8C2C00075AAD9 /* Credits.rtf in Resources */,
-				49A6848517D8C2C00075AAD9 /* MainMenu.xib in Resources */,
+				4946DDE817D9FEFF00B913F8 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,35 +210,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49A6847B17D8C2C00075AAD9 /* main.m in Sources */,
-				49A6848217D8C2C00075AAD9 /* AppDelegate.m in Sources */,
-				49A6848817D8C2C00075AAD9 /* ReduOSC.xcdatamodeld in Sources */,
+				4946DDDA17D9FEE900B913F8 /* AppCommon.m in Sources */,
+				4946DDDB17D9FEE900B913F8 /* AppDelegate.m in Sources */,
+				4946DDE217D9FEF300B913F8 /* main.m in Sources */,
+				4946DDE317D9FEF300B913F8 /* OSCController.m in Sources */,
+				495FDA5017DA3F3500922E16 /* TimelineScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		49A6847717D8C2C00075AAD9 /* InfoPlist.strings */ = {
+		4946DDE617D9FEFF00B913F8 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				49A6847817D8C2C00075AAD9 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		49A6847D17D8C2C00075AAD9 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49A6847E17D8C2C00075AAD9 /* en */,
-			);
-			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		49A6848317D8C2C00075AAD9 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				49A6848417D8C2C00075AAD9 /* en */,
+				4946DDE717D9FEFF00B913F8 /* en */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -232,7 +259,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -259,7 +286,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -268,10 +295,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/ReOSC/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ReduOSC/ReduOSC-Prefix.pch";
-				INFOPLIST_FILE = "ReduOSC/ReduOSC-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "ReOSC/ReOSC-Prefix.pch";
+				INFOPLIST_FILE = "ReOSC/ReOSC-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_NAME = ReOSC;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -280,10 +313,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/ReOSC/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ReduOSC/ReduOSC-Prefix.pch";
-				INFOPLIST_FILE = "ReduOSC/ReduOSC-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "ReOSC/ReOSC-Prefix.pch";
+				INFOPLIST_FILE = "ReOSC/ReOSC-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				PRODUCT_NAME = ReOSC;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -291,7 +330,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		49A6846617D8C2C00075AAD9 /* Build configuration list for PBXProject "ReduOSC" */ = {
+		49A6846617D8C2C00075AAD9 /* Build configuration list for PBXProject "ReOSC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				49A6848917D8C2C00075AAD9 /* Debug */,
@@ -300,17 +339,27 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		49A6848B17D8C2C00075AAD9 /* Build configuration list for PBXNativeTarget "ReduOSC" */ = {
+		49A6848B17D8C2C00075AAD9 /* Build configuration list for PBXNativeTarget "ReOSC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				49A6848C17D8C2C00075AAD9 /* Debug */,
 				49A6848D17D8C2C00075AAD9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		4946DDDF17D9FEF300B913F8 /* ReduOSC.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+			);
+			name = ReduOSC.xcdatamodeld;
+			path = ../ReOSC/ReduOSC.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		49A6848617D8C2C00075AAD9 /* ReduOSC.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

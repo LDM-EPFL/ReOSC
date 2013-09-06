@@ -19,8 +19,11 @@
     
     NSTimer* mainTimer;
     
+    BOOL f_playbackRecording;
+    int messageCounter;
     NSMutableArray* recordBuffer;
     int flushBufferAt;
 }
 
+@property (weak) IBOutlet NSProgressIndicator *dropLoadProgress;
 @end
