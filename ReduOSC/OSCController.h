@@ -1,0 +1,13 @@
+//
+//  OSCController.h
+//  ReduOSC
+//
+//  Created by Andrew on 9/5/13.
+//  Copyright (c) 2013 FERAL RESEARCH COALITION. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+@interface OSCController : NSView
+
+@end
