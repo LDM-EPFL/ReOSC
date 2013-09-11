@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  ReduOSC
+//  ReOSC
 //
 //  Created by Andrew on 9/5/13.
 //  Copyright (c) 2013 FERAL RESEARCH COALITION. All rights reserved.
@@ -15,8 +15,6 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize managedObjectContext = _managedObjectContext;
-
-
 
 // Pop up an alert
 +(void)alertUser:(NSString*)alertTitle info:(NSString*)alertMessage{
@@ -67,12 +65,12 @@
     [[AppCommon sharedAppCommon] setMainWindow:_window];
 }
 
-// Returns the directory the application uses to store the Core Data store file. This code uses a directory named "feralresearch.org.ReduOSC" in the user's Application Support directory.
+// Returns the directory the application uses to store the Core Data store file. This code uses a directory named "feralresearch.org.ReOSC" in the user's Application Support directory.
 - (NSURL *)applicationFilesDirectory
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *appSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
-    return [appSupportURL URLByAppendingPathComponent:@"feralresearch.org.ReduOSC"];
+    return [appSupportURL URLByAppendingPathComponent:@"feralresearch.org.ReOSC"];
 }
 
 // Creates if necessary and returns the managed object model for the application.
@@ -82,7 +80,7 @@
         return _managedObjectModel;
     }
 	
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ReduOSC" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ReOSC" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
@@ -129,7 +127,7 @@
         }
     }
     
-    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"ReduOSC.storedata"];
+    NSURL *url = [applicationFilesDirectory URLByAppendingPathComponent:@"ReOSC.storedata"];
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:mom];
     if (![coordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:url options:nil error:&error]) {
         [[NSApplication sharedApplication] presentError:error];

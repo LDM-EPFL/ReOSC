@@ -7,26 +7,13 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "ReduOSC/OSCController.m"
-         timestampString = "400161484.974376"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "94"
-         endingLineNumber = "94"
-         landmarkName = "-flushRecordBuffer"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "ReOSC/OSCController.m"
-         timestampString = "400177252.221061"
+         timestampString = "400550156.654334"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "75"
-         endingLineNumber = "75"
-         landmarkName = "-playbackRecording"
+         startingLineNumber = "166"
+         endingLineNumber = "166"
+         landmarkName = "-playbackFrame"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

@@ -14,7 +14,7 @@
 -(BOOL)acceptsFirstResponder{return YES;}
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {return NSDragOperationCopy;}
 -(BOOL)prepareForDragOperation:(id<NSDraggingInfo>)sender {return YES;}
--(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {return [AppCommon performDragOperation:sender];}
+-(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {return [[AppCommon sharedAppCommon] performDragOperation:sender];}
 
 
 -(void)awakeFromNib{

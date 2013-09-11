@@ -19,7 +19,6 @@
 		4946DDF417DA00D200B913F8 /* VVMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4946DDEB17D9FF1700B913F8 /* VVMIDI.framework */; };
 		4946DDF517DA00D200B913F8 /* VVOSC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4946DDEC17D9FF1700B913F8 /* VVOSC.framework */; };
 		495FDA5017DA3F3500922E16 /* TimelineScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */; };
-		498DA27117DC91230060F022 /* Untitled.icns in Resources */ = {isa = PBXBuildFile; fileRef = 498DA27017DC91230060F022 /* Untitled.icns */; };
 		498DA27317DC95500060F022 /* reOSC.icns in Resources */ = {isa = PBXBuildFile; fileRef = 498DA27217DC95500060F022 /* reOSC.icns */; };
 		49A6846F17D8C2C00075AAD9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49A6846E17D8C2C00075AAD9 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -56,7 +55,6 @@
 		4946DDF617DA00FF00B913F8 /* CWLSynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CWLSynthesizeSingleton.h; path = ReOSC/CWLSynthesizeSingleton.h; sourceTree = SOURCE_ROOT; };
 		495FDA4E17DA3F3500922E16 /* TimelineScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimelineScrollView.h; path = ReOSC/TimelineScrollView.h; sourceTree = SOURCE_ROOT; };
 		495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimelineScrollView.m; path = ReOSC/TimelineScrollView.m; sourceTree = SOURCE_ROOT; };
-		498DA27017DC91230060F022 /* Untitled.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Untitled.icns; sourceTree = "<group>"; };
 		498DA27217DC95500060F022 /* reOSC.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = reOSC.icns; sourceTree = "<group>"; };
 		49A6846B17D8C2C00075AAD9 /* ReOSC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReOSC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49A6846E17D8C2C00075AAD9 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -85,7 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				498DA27217DC95500060F022 /* reOSC.icns */,
-				498DA27017DC91230060F022 /* Untitled.icns */,
 				49A6847417D8C2C00075AAD9 /* ReOSC */,
 				49A6846D17D8C2C00075AAD9 /* Frameworks */,
 				49A6846C17D8C2C00075AAD9 /* Products */,
@@ -126,15 +123,14 @@
 			isa = PBXGroup;
 			children = (
 				4946DDE617D9FEFF00B913F8 /* MainMenu.xib */,
-				495FDA4E17DA3F3500922E16 /* TimelineScrollView.h */,
-				495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */,
-				4946DDDD17D9FEF300B913F8 /* OSCController.h */,
-				4946DDDE17D9FEF300B913F8 /* OSCController.m */,
 				4946DDD617D9FEE900B913F8 /* AppCommon.h */,
 				4946DDD717D9FEE900B913F8 /* AppCommon.m */,
 				4946DDD817D9FEE900B913F8 /* AppDelegate.h */,
 				4946DDD917D9FEE900B913F8 /* AppDelegate.m */,
-				49A6848617D8C2C00075AAD9 /* ReduOSC.xcdatamodeld */,
+				495FDA4E17DA3F3500922E16 /* TimelineScrollView.h */,
+				495FDA4F17DA3F3500922E16 /* TimelineScrollView.m */,
+				4946DDDD17D9FEF300B913F8 /* OSCController.h */,
+				4946DDDE17D9FEF300B913F8 /* OSCController.m */,
 				49A6847517D8C2C00075AAD9 /* Supporting Files */,
 			);
 			name = ReOSC;
@@ -144,6 +140,7 @@
 		49A6847517D8C2C00075AAD9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				49A6848617D8C2C00075AAD9 /* ReduOSC.xcdatamodeld */,
 				4946DDF617DA00FF00B913F8 /* CWLSynthesizeSingleton.h */,
 				4946DDDC17D9FEF300B913F8 /* main.m */,
 				4946DDDF17D9FEF300B913F8 /* ReduOSC.xcdatamodeld */,
@@ -206,7 +203,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4946DDE817D9FEFF00B913F8 /* MainMenu.xib in Resources */,
-				498DA27117DC91230060F022 /* Untitled.icns in Resources */,
 				498DA27317DC95500060F022 /* reOSC.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

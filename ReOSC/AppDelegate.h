@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  ReduOSC
+//  ReOSC
 //
 //  Created by Andrew on 9/5/13.
 //  Copyright (c) 2013 FERAL RESEARCH COALITION. All rights reserved.

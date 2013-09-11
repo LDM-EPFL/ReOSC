@@ -19,7 +19,7 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 // Custom properties for this ap
 @property NSWindow* mainWindow;
 
-@property NSProgressIndicator *dropLoadProgress;
+@property double dropLoadProgressValue;
 
 @property BOOL playbackAvailable;
 
@@ -29,9 +29,14 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 @property NSString* input_duration;
 @property NSString* input_timeStamp;
 
+@property NSColor*  statusLight;
+
+@property BOOL cancelLoad;
+@property BOOL showLoadProgress;
+
 @property NSMutableArray* input_oscFromLog;
 
-+(BOOL)performDragOperation:(id<NSDraggingInfo>)sender;
+-(BOOL)performDragOperation:(id<NSDraggingInfo>)sender;
 
 @end
 
