@@ -100,7 +100,6 @@
         [[NSUserDefaults standardUserDefaults] setValue:basePath forKey:@"recordingBasepath"];
         
         // Init directory so it's present
-        
         NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
         NSLog(@"IN: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
     
@@ -351,10 +350,12 @@
             // For every message in the buffer, dump it
             NSMutableArray *humanReadableArray=[[NSMutableArray alloc] init];
             
-            for(OSCMessage *m in bufferCopy){
+            for(NSArray* logLine in bufferCopy){
+                NSString* timeStamp = logLine[0];
+                OSCMessage *m = logLine[1];
                 NSString* oscPacketLogLine=[[NSString alloc] init];
-                NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-                oscPacketLogLine = [NSString stringWithFormat:@"%.25f: %@",timeStamp,[m address]];
+                
+                oscPacketLogLine = [NSString stringWithFormat:@"%@: %@",timeStamp,[m address]];
                 
                 for(OSCValue *v in [m valueArray]){
                    
@@ -489,7 +490,11 @@
     
     // If record option is on, add message to buffer
     if([[NSUserDefaults standardUserDefaults] boolForKey:@"b_record"]){
-        [recordBuffer addObject:m];
+        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+        NSMutableArray *logEntry=[[NSMutableArray alloc] init];
+        [logEntry addObject:[NSString stringWithFormat:@"%f",timeStamp]];
+        [logEntry addObject:m];
+        [recordBuffer addObject:logEntry];
     }
 }
 

@@ -106,7 +106,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                 }
                 
                 for(NSString* logEntry in array){
-                    NSLog(@"%@",logEntry);
+                   
                     NSArray *parsedEntry = [logEntry componentsSeparatedByString:@" "];
                     [entireLog addObject:parsedEntry];
                 }
@@ -130,12 +130,12 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                         NSTimeInterval duration = [endDate timeIntervalSinceDate:startDate];
                         NSDate *durationDate = [NSDate dateWithTimeIntervalSince1970:duration];
                         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                        [dateFormatter setDateFormat:@"HH:mm:SS"];
+                        [dateFormatter setDateFormat:@"HH:mm:ss.SS"];
                         [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
                         
                         NSDateFormatter *format = [[NSDateFormatter alloc] init];
                         
-                        [format setDateFormat:@"MMM dd, yyyy HH:mm::SS"];
+                        [format setDateFormat:@"MMM dd, yyyy HH:mm:ss.SS"];
                         
                         [[AppCommon sharedAppCommon] setPlaybackAvailable:TRUE];
                         
