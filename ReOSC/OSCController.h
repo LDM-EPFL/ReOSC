@@ -12,8 +12,10 @@
 @class OSCInPort;
 
 @interface OSCController : NSView{
+    
+    BOOL isSendingOSC;
     OSCManager *OSCmanagerObject;
-    OSCOutPort *OSCOutput;
+    NSMutableArray *OSCOutputs;
     OSCInPort  *inPort;
     
     double frameTimer;

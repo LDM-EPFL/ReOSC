@@ -30,6 +30,7 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 @property NSString* input_timeStamp;
 
 @property NSColor*  statusLight;
+@property NSColor*  statusLight_playback;
 
 @property BOOL cancelLoad;
 @property BOOL showLoadProgress;

@@ -19,6 +19,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
     if (self = [super init]){
         _playbackAvailable=false;
         _statusLight=[NSColor grayColor];
+        _statusLight_playback=[NSColor grayColor];
     }
     return self;
 }
@@ -144,7 +145,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                         [[AppCommon sharedAppCommon]setInput_fullFilePath:path];
                         [[AppCommon sharedAppCommon]setInput_entryCount:[NSString stringWithFormat:@"%li log entries",(unsigned long)[entireLog count]]];
                         [[AppCommon sharedAppCommon]setInput_duration:[dateFormatter stringFromDate:durationDate]];
-                        [[AppCommon sharedAppCommon]setInput_timeStamp:[NSString stringWithFormat:@"%@-%@",[format stringFromDate:startDate],[format stringFromDate:endDate]]];
+                        [[AppCommon sharedAppCommon]setInput_timeStamp:[NSString stringWithFormat:@"%@",[format stringFromDate:startDate]]];
                         
                         [[AppCommon sharedAppCommon] setInput_oscFromLog:entireLog];
                     }

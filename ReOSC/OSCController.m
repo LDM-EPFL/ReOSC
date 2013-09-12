@@ -26,6 +26,8 @@
     // Allocate OSC devices
     OSCmanagerObject = [[OSCManager alloc] init];
     [OSCmanagerObject setDelegate:self];
+    OSCOutputs=[[NSMutableArray alloc] init];
+    isSendingOSC=NO;
     [self resetOSC];
     
     // Allocate a recording buffer
@@ -65,6 +67,7 @@
     if([sender state] == NSOnState){
 
         // Turn off listen and record
+        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
         [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
         [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
         
@@ -76,6 +79,9 @@
         
     // Playback OFF
     }else{
+        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor grayColor]];
+        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
+
         [playbackTimer invalidate];
     }
 
@@ -86,6 +92,8 @@
 
     // Recording ON
     if([sender state] == NSOnState){
+        
+        
         NSLog(@"Recording on...");
         
         // Base path where recordings live
@@ -127,7 +135,8 @@
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
             // If not paused
             if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
-                
+
+                [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
                 
             
                 // Out of range
@@ -168,100 +177,8 @@
                 }
 
 
-            }
-        }
-    }
-}
-
-
--(void)playbackFrame1{
-    NSArray* logEntry = [[AppCommon sharedAppCommon] input_oscFromLog][logPointer];
-    next_timeStampAsDateObject = [NSDate dateWithTimeIntervalSince1970:[logEntry[0] doubleValue]];
-    [self sendLogEntry:logEntry];
-    logPointer++;
-    
-    
-    // Out of range
-    if (logPointer >= [[[AppCommon sharedAppCommon] input_oscFromLog] count] ) {
-        
-        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
-        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
-        logPointer=0;
-        
-        // Are we looping?
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
-            [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
-        }
-    }
-
-
-}
-
--(void)playbackFrame2{
-    
-    if([[AppCommon sharedAppCommon] playbackAvailable]){
-        // Play
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
-            // If not paused
-            if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
-                
-                // Right now?
-                NSDate *now = [NSDate date];
-                
-                // Set our "date pointer" to the first entry in the log
-                if(!logDatePointer){
-                    // Get a timestamp
-                    NSLog(@"First time...");
-                    NSTimeInterval timeStamp =[[[AppCommon sharedAppCommon] input_oscFromLog][logPointer][0] doubleValue];
-                    NSDate *timeStampAsDateObject = [NSDate dateWithTimeIntervalSince1970:timeStamp];
-                    next_timeStampAsDateObject=timeStampAsDateObject;
-                    logDatePointer = timeStampAsDateObject;
-                    lastVisitedLog = now;
-                    logBegins=timeStampAsDateObject;
-                }
-                
-                // We should be at t+time since we last checked
-                NSTimeInterval timeSinceLastVisit=[now timeIntervalSinceDate:lastVisitedLog];
-                logDatePointer=[logDatePointer dateByAddingTimeInterval:timeSinceLastVisit];
-                
-                NSLog(@"%@",[timestamp_df stringFromDate:now]);
-                NSLog(@">>%@",[timestamp_df stringFromDate:logDatePointer]);
-                
-                // If there are events in the log corresponding to this time chunk, pump them out
-                int eventsThisChunk=0;
-                while(  ([logDatePointer compare:next_timeStampAsDateObject] == NSOrderedDescending)
-                      ||([logDatePointer compare:next_timeStampAsDateObject] == NSOrderedSame)){
-                    
-                    // Out of range
-                    if (logPointer >= [[[AppCommon sharedAppCommon] input_oscFromLog] count] ) {
-                        
-                        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
-                        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
-                        logPointer=0;
-                        logDatePointer=nil;
-                        
-                        // Are we looping?
-                        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
-                            [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
-                        }
-                        
-                        break;
-                    }
-                    
-                    NSArray* logEntry = [[AppCommon sharedAppCommon] input_oscFromLog][logPointer];
-                    //NSLog(@"%@ is >= %@",[timestamp_df stringFromDate:next_timeStampAsDateObject],[timestamp_df stringFromDate:logDatePointer]);
-                    next_timeStampAsDateObject = [NSDate dateWithTimeIntervalSince1970:[logEntry[0] doubleValue]];
-                    [self sendLogEntry:logEntry];
-                    logPointer++;
-                    
-                    eventsThisChunk++;
-                    
-                }
-                if(eventsThisChunk > 0){
-                //NSLog(@"Finished checked: %.10f ago (processed %d/%ld events) pointer:%i\n\n",timeSinceLastVisit,eventsThisChunk,(unsigned long)[[[AppCommon sharedAppCommon] input_oscFromLog] count],logPointer);
-                }
-                lastVisitedLog=now;
-                
+            }else{
+                [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
             }
         }
     }
@@ -308,10 +225,11 @@
     }
    
     // Actually send
-    if(OSCOutput){
-        [OSCOutput sendThisMessage:newMessage];
+    if (isSendingOSC){
+        for(OSCOutPort *oscOut in OSCOutputs){
+            [oscOut sendThisMessage:newMessage];
+        }
     }
-
 }
 
 // Flush the buffer to disk (threaded so we don't slow down logging)
@@ -431,10 +349,9 @@
 
 // Reset OSC (clear all listeners and senders)
 -(void)resetOSC{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [OSCmanagerObject deleteAllInputs];
-        [OSCmanagerObject deleteAllOutputs];
-    });
+    [OSCmanagerObject deleteAllInputs];
+    [OSCmanagerObject deleteAllOutputs];
+    [OSCOutputs removeAllObjects];
 }
 
 // Set up the OSC Listener as needed
@@ -444,8 +361,17 @@
          inPort=nil;
          	[[AppCommon sharedAppCommon] setValue:[NSColor grayColor] forKey:@"statusLight"];
      }else{
+         
+         
+         // What if user sends blank port?
+         if([[[NSUserDefaults standardUserDefaults] valueForKey:@"osc_listenPort"] length] == 0){
+             [AppDelegate alertUser:@"Listening port cannot be blank" info:@"Provide a port to listen"];
+             [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
+             return;
+         }
+         
+         // Turn on the listening light
          [[AppCommon sharedAppCommon] setValue:[NSColor orangeColor] forKey:@"statusLight"];
-
          if(!inPort){
              int listenPort=(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"];
              NSLog(@"OSC: Bind to port: %i",listenPort);
@@ -466,15 +392,45 @@
 -(void)setupOSCOutput{
     
     // Setup output
-    if (![[NSUserDefaults standardUserDefaults] integerForKey:@"b_send"]){
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_send"]){
         [OSCmanagerObject deleteAllOutputs];
-        OSCOutput=nil;
+        isSendingOSC=NO;
     }else{
-        double oscPort = [[NSUserDefaults standardUserDefaults] integerForKey:@"osc_sendPort"];
-        NSString *oscIP = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendIP"];
-        if (!OSCOutput){
-            OSCOutput = [OSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
+        
+       
+        
+        NSString* listOfInputs = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendList"];
+        [[NSUserDefaults standardUserDefaults] setValue:[listOfInputs stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"osc_sendList"];
+        NSArray* arrayOfInputs = [listOfInputs componentsSeparatedByString:@","];
+        NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas to separate them.";
+        
+        // No output specified
+        if([listOfInputs length] == 0){
+            [AppDelegate alertUser:@"No address to send to!" info:addressMessage];
+            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
+            return;
         }
+        
+        for(NSString* __strong possibleAddress in arrayOfInputs){
+            possibleAddress = [possibleAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            NSArray* outputAddress = [possibleAddress componentsSeparatedByString:@":"];
+
+            if([outputAddress count] < 2){
+                [AppDelegate alertUser:@"Malformed Address" info:[NSString stringWithFormat:@"I don't know how to send to %@\n\n%@",possibleAddress,addressMessage]];
+                [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
+            }else{
+                NSString* oscIP = outputAddress[0];
+                double oscPort = [outputAddress[1] doubleValue];
+                OSCOutPort *newOSCOutput = [OSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
+                [OSCOutputs addObject:newOSCOutput];
+
+            }
+        }
+        
+        
+        
+        
+       isSendingOSC=YES;
     }
 }
 
@@ -484,9 +440,12 @@
 	[[AppCommon sharedAppCommon] setValue:[NSColor greenColor] forKey:@"statusLight"];
     
     // If we are repeating, repeat
-	if(OSCOutput){
-        [OSCOutput sendThisMessage:m];
+    if (isSendingOSC){
+        for(OSCOutPort *oscOut in OSCOutputs){
+            [oscOut sendThisMessage:m];
+        }
     }
+	
     
     // If record option is on, add message to buffer
     if([[NSUserDefaults standardUserDefaults] boolForKey:@"b_record"]){
