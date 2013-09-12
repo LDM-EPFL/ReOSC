@@ -20,6 +20,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         _playbackAvailable=false;
         _statusLight=[NSColor grayColor];
         _statusLight_playback=[NSColor grayColor];
+        _playbackTimeElapsed=0;
     }
     return self;
 }
@@ -31,6 +32,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         return;
     }
 }
+
 
 // Accept drag and drop
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {

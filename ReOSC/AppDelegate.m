@@ -38,7 +38,7 @@
 // Thx http://www.cocoawithlove.com/2009/07/temporary-files-and-folders-in-cocoa.html
 +(NSString*)createTempWorkingFolder{
     NSString *tempDirectoryTemplate =
-    [NSTemporaryDirectory() stringByAppendingPathComponent:@"edu.olin.daVinci.XXXXXX"];
+    [NSTemporaryDirectory() stringByAppendingPathComponent:@"org.feralresearch.reosc"];
     const char *tempDirectoryTemplateCString =
     [tempDirectoryTemplate fileSystemRepresentation];
     char *tempDirectoryNameCString =

@@ -14,8 +14,8 @@
 @interface OSCController : NSView{
     
     BOOL isSendingOSC;
-    OSCManager *OSCmanagerObject;
-    NSMutableArray *OSCOutputs;
+    OSCManager *myOSCmanagerObject;
+    NSMutableArray *myOSCOutputs;
     OSCInPort  *inPort;
     
     double frameTimer;
@@ -24,6 +24,7 @@
     NSTimer* mainTimer;
     NSTimer* playbackTimer;
     NSDateFormatter *timestamp_df;
+    NSDateFormatter *duration_df;
 
     NSDate* next_timeStampAsDateObject;
     NSDate* logDatePointer;

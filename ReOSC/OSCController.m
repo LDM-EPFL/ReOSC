@@ -24,9 +24,9 @@
 - (void)awakeFromNib{
     
     // Allocate OSC devices
-    OSCmanagerObject = [[OSCManager alloc] init];
-    [OSCmanagerObject setDelegate:self];
-    OSCOutputs=[[NSMutableArray alloc] init];
+    myOSCmanagerObject = [[OSCManager alloc] init];
+    [myOSCmanagerObject setDelegate:self];
+    myOSCOutputs=[[NSMutableArray alloc] init];
     isSendingOSC=NO;
     [self resetOSC];
     
@@ -45,10 +45,16 @@
     
     timestamp_df = [[NSDateFormatter alloc] init];
     [timestamp_df setDateFormat:@"MMM dd HH:mm:ssssss.SSS"];
+    //[timestamp_df setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     
-    mainTimer = [NSTimer scheduledTimerWithTimeInterval:1/10 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
+    duration_df = [[NSDateFormatter alloc] init];
+    [duration_df setDateFormat:@"HH:mm:ss.SS"];
+    [duration_df setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    
+    mainTimer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:mainTimer forMode:NSEventTrackingRunLoopMode];
     
+ 
 }
 
 // Loop
@@ -148,6 +154,10 @@
                     logBegins=nil;
                     playbackBegan=nil;
                     
+                    // Set playback duration
+                    [[AppCommon sharedAppCommon] setPlaybackDuration:[duration_df stringFromDate:[NSDate dateWithTimeInterval:0 sinceDate:[NSDate date]]]];
+
+                    
                     // Are we looping?
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
                         [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
@@ -175,6 +185,9 @@
                     [self sendLogEntry:logEntry];
                     logPointer++;
                 }
+                
+                // Set playback duration
+                [[AppCommon sharedAppCommon] setPlaybackDuration:[duration_df stringFromDate:[NSDate dateWithTimeInterval:overallTimeElapsed sinceDate:playbackBegan]]];
 
 
             }else{
@@ -226,7 +239,7 @@
    
     // Actually send
     if (isSendingOSC){
-        for(OSCOutPort *oscOut in OSCOutputs){
+        for(OSCOutPort *oscOut in myOSCOutputs){
             [oscOut sendThisMessage:newMessage];
         }
     }
@@ -271,9 +284,7 @@
             for(NSArray* logLine in bufferCopy){
                 NSString* timeStamp = logLine[0];
                 OSCMessage *m = logLine[1];
-                NSString* oscPacketLogLine=[[NSString alloc] init];
-                
-                oscPacketLogLine = [NSString stringWithFormat:@"%@: %@",timeStamp,[m address]];
+                NSString* oscPacketLogLine= [NSString stringWithFormat:@"%@: %@",timeStamp,[m address]];
                 
                 for(OSCValue *v in [m valueArray]){
                    
@@ -349,17 +360,17 @@
 
 // Reset OSC (clear all listeners and senders)
 -(void)resetOSC{
-    [OSCmanagerObject deleteAllInputs];
-    [OSCmanagerObject deleteAllOutputs];
-    [OSCOutputs removeAllObjects];
+    [myOSCmanagerObject deleteAllInputs];
+    [myOSCmanagerObject deleteAllOutputs];
+    [myOSCOutputs removeAllObjects];
 }
 
 // Set up the OSC Listener as needed
 -(void)setupOSCInput{
      if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_listen"]){
-        [OSCmanagerObject deleteAllInputs];
+        [myOSCmanagerObject deleteAllInputs];
          inPort=nil;
-         	[[AppCommon sharedAppCommon] setValue:[NSColor grayColor] forKey:@"statusLight"];
+        [[AppCommon sharedAppCommon] setValue:[NSColor grayColor] forKey:@"statusLight"];
      }else{
          
          
@@ -375,8 +386,8 @@
          if(!inPort){
              int listenPort=(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"];
              NSLog(@"OSC: Bind to port: %i",listenPort);
-             [OSCmanagerObject deleteAllInputs];
-             inPort = [OSCmanagerObject createNewInputForPort:listenPort];
+             [myOSCmanagerObject deleteAllInputs];
+             inPort = [myOSCmanagerObject createNewInputForPort:listenPort];
                  
              if(!inPort){
                 [AppDelegate alertUser:@"Error!" info:[NSString stringWithFormat:@"I cannot bind to port %ld. Perhaps it's in use?",(long)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"]]];
@@ -393,42 +404,39 @@
     
     // Setup output
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_send"]){
-        [OSCmanagerObject deleteAllOutputs];
+        [myOSCmanagerObject deleteAllOutputs];
         isSendingOSC=NO;
     }else{
         
-       
-        
-        NSString* listOfInputs = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendList"];
-        [[NSUserDefaults standardUserDefaults] setValue:[listOfInputs stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"osc_sendList"];
-        NSArray* arrayOfInputs = [listOfInputs componentsSeparatedByString:@","];
-        NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas to separate them.";
-        
-        // No output specified
-        if([listOfInputs length] == 0){
-            [AppDelegate alertUser:@"No address to send to!" info:addressMessage];
-            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
-            return;
-        }
-        
-        for(NSString* __strong possibleAddress in arrayOfInputs){
-            possibleAddress = [possibleAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            NSArray* outputAddress = [possibleAddress componentsSeparatedByString:@":"];
-
-            if([outputAddress count] < 2){
-                [AppDelegate alertUser:@"Malformed Address" info:[NSString stringWithFormat:@"I don't know how to send to %@\n\n%@",possibleAddress,addressMessage]];
+        // Setup once
+        if(!isSendingOSC){
+            NSString* listOfDestinations = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendList"];
+            [[NSUserDefaults standardUserDefaults] setValue:[listOfDestinations stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"osc_sendList"];
+            NSArray* arrayOfInputs = [listOfDestinations componentsSeparatedByString:@","];
+            NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas to separate them.";
+            
+            // No output specified
+            if([listOfDestinations length] == 0){
+                [AppDelegate alertUser:@"No address to send to!" info:addressMessage];
                 [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
-            }else{
-                NSString* oscIP = outputAddress[0];
-                double oscPort = [outputAddress[1] doubleValue];
-                OSCOutPort *newOSCOutput = [OSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
-                [OSCOutputs addObject:newOSCOutput];
+                return;
+            }
+            
+            for(NSString* possibleAddress in arrayOfInputs){
+                NSString* possibleAddressTrimmed = [possibleAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                NSArray* outputAddress = [possibleAddressTrimmed componentsSeparatedByString:@":"];
 
+                if([outputAddress count] < 2){
+                    [AppDelegate alertUser:@"Malformed Address" info:[NSString stringWithFormat:@"I don't know how to send to %@\n\n%@",possibleAddress,addressMessage]];
+                    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
+                }else{
+                    NSString* oscIP = outputAddress[0];
+                    double oscPort = [outputAddress[1] doubleValue];
+                    OSCOutPort *newOSCOutput = [myOSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
+                    [myOSCOutputs addObject:newOSCOutput];
+                }
             }
         }
-        
-        
-        
         
        isSendingOSC=YES;
     }
@@ -441,7 +449,7 @@
     
     // If we are repeating, repeat
     if (isSendingOSC){
-        for(OSCOutPort *oscOut in OSCOutputs){
+        for(OSCOutPort *oscOut in myOSCOutputs){
             [oscOut sendThisMessage:m];
         }
     }
