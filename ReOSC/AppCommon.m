@@ -47,19 +47,24 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
     NSPasteboard* pbrd = [sender draggingPasteboard];
     NSArray *draggedFilePaths = [pbrd propertyListForType:NSFilenamesPboardType];
     NSString *path=draggedFilePaths[0];
+    NSString *fileExt;
     
     
     // You could drop a .log file...
     NSMutableArray *logfiles=[[NSMutableArray alloc] init];
-    if([[[[path lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"log"]){
-        [logfiles addObject:[path lastPathComponent]];
-        path = [path stringByDeletingLastPathComponent];
+    if([[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"log"] ||
+       [[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"tlog"]){
+        [logfiles addObject:[draggedFilePaths[0] lastPathComponent]];
+        path = [draggedFilePaths[0] stringByDeletingLastPathComponent];
+        fileExt=[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject];
         
-    // Or a directory full of them
+    // Or a directory full of .log
     }else{
         NSArray *dirFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
         logfiles = (NSMutableArray*)[dirFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.log'"]];
     }
+    
+    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MM/dd/yyyy HH:mm:s"];
     
@@ -96,22 +101,38 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                     }
                 });
                 
-                NSString *fileToRead=[[NSString alloc] initWithFormat:@"%@/%@",path,file];
-                NSData *data = [NSData dataWithContentsOfFile:fileToRead];
-                NSArray *array = (NSArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+                
+                // Special .tlog
+                NSString *fileToRead;
+                NSMutableArray *array=[[NSMutableArray alloc] init];
+                if([fileExt isEqualToString:@"tlog"]){
+                    fileToRead=[[NSString alloc] initWithFormat:@"%@/%@",path,file];
+                    NSString* fileContents=[NSString stringWithContentsOfFile:fileToRead encoding:NSUTF8StringEncoding error:nil];
+                    NSArray* fileLines = [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+                    for(NSString* line in fileLines){
+                        NSLog(line);
+                        [array addObject:line];
+                    }
+                    
+                // Normal .log
+                }else{
+                    fileToRead=[[NSString alloc] initWithFormat:@"%@/%@",path,file];
+                    NSData *data = [NSData dataWithContentsOfFile:fileToRead];
+                    array = (NSMutableArray*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+                }
+                
+                // Unpack
                 if([array count] == 0){
                     [AppDelegate alertUser:@"Empty Log" info:[NSString stringWithFormat:@"That logfile appears empty."]];
-
                     NSLog(@"Nothing to process!");
                     haveLogToProcess=FALSE;
+                }else{
+                    for(NSString* logEntry in array){
+                        NSArray *parsedEntry = [logEntry componentsSeparatedByString:@" "];
+                        [entireLog addObject:parsedEntry];
+                    }
                 }
-                
-                for(NSString* logEntry in array){
-                   
-                    NSArray *parsedEntry = [logEntry componentsSeparatedByString:@" "];
-                    [entireLog addObject:parsedEntry];
-                }
-                
+
             }
             
             // Postprocess callback
