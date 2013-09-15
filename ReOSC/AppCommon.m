@@ -49,14 +49,12 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
     NSString *path=draggedFilePaths[0];
     
     
-    NSLog(@"Trying to read: %@",path);
-    
-    
     // You could drop a .log file...
     NSMutableArray *logfiles=[[NSMutableArray alloc] init];
     if([[[[path lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"log"]){
         [logfiles addObject:[path lastPathComponent]];
         path = [path stringByDeletingLastPathComponent];
+        
     // Or a directory full of them
     }else{
         NSArray *dirFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
@@ -145,7 +143,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                         NSString* fileName=[[path componentsSeparatedByString:@"/"] lastObject];
                         [[AppCommon sharedAppCommon]setInput_filename:fileName];
                         [[AppCommon sharedAppCommon]setInput_fullFilePath:path];
-                        [[AppCommon sharedAppCommon]setInput_entryCount:[NSString stringWithFormat:@"%li log entries",(unsigned long)[entireLog count]]];
+                        [[AppCommon sharedAppCommon]setInput_entryCount:[NSString stringWithFormat:@"%li events",(unsigned long)[entireLog count]]];
                         [[AppCommon sharedAppCommon]setInput_duration:[dateFormatter stringFromDate:durationDate]];
                         [[AppCommon sharedAppCommon]setInput_timeStamp:[NSString stringWithFormat:@"%@",[format stringFromDate:startDate]]];
                         

@@ -25,6 +25,11 @@
     NSTimer* playbackTimer;
     NSDateFormatter *timestamp_df;
     NSDateFormatter *duration_df;
+    BOOL didJustPause;
+    BOOL didJustUnpause;
+    NSTimeInterval overallPauseTime;
+    NSTimeInterval thisPauseTime;
+    NSDate *pauseBegan;
 
     NSDate* next_timeStampAsDateObject;
     NSDate* logDatePointer;

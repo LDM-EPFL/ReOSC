@@ -34,31 +34,6 @@
 }
 
 
-// Create a safe temporary working location
-// Thx http://www.cocoawithlove.com/2009/07/temporary-files-and-folders-in-cocoa.html
-+(NSString*)createTempWorkingFolder{
-    NSString *tempDirectoryTemplate =
-    [NSTemporaryDirectory() stringByAppendingPathComponent:@"org.feralresearch.reosc"];
-    const char *tempDirectoryTemplateCString =
-    [tempDirectoryTemplate fileSystemRepresentation];
-    char *tempDirectoryNameCString =
-    (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
-    strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
-    
-    char *result = mkdtemp(tempDirectoryNameCString);
-    // handle directory creation failure
-    if (!result){
-        [self alertUser:@"FATAL!" info:@"Serious error, cannot create working directory"];
-    }
-    
-    NSString *tempDirectoryPath =
-    [[NSFileManager defaultManager]
-     stringWithFileSystemRepresentation:tempDirectoryNameCString
-     length:strlen(result)];
-    free(tempDirectoryNameCString);
-    
-    return [NSString stringWithFormat:@"%@/",tempDirectoryPath];
-}
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{

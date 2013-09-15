@@ -72,25 +72,50 @@
     // Playback ON
     if([sender state] == NSOnState){
 
-        // Turn off listen and record
-        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
-        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
-        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
-        
-        playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1/30 target:self selector:@selector(playbackFrame) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:playbackTimer forMode:NSEventTrackingRunLoopMode];
-        
-        logDatePointer=nil;
-
+        [self playback_on];
+    
         
     // Playback OFF
     }else{
-        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor grayColor]];
-        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
-
-        [playbackTimer invalidate];
+        [self playback_off];
     }
 
+}
+
+-(void)playback_on{
+    [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
+    // Turn off listen and record
+    [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
+    
+    playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1/30 target:self selector:@selector(playbackFrame) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:playbackTimer forMode:NSEventTrackingRunLoopMode];
+    
+    logDatePointer=nil;
+    didJustPause=TRUE;
+    didJustUnpause=FALSE;
+    overallPauseTime=0;
+
+
+}
+-(void)playback_off{
+    [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor grayColor]];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
+    [[AppCommon sharedAppCommon] setPlaybackDuration:0];
+    [playbackTimer invalidate];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
+    logPointer=0;
+    logBegins=nil;
+    playbackBegan=nil;
+    
+    
+    // Set playback duration
+    [[AppCommon sharedAppCommon] setPlaybackDuration:0];
+
+ 
 }
 
 // Record button clicked
@@ -138,39 +163,53 @@
     
     if([[AppCommon sharedAppCommon] playbackAvailable]){
         // Play
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
-            // If not paused
-            if (![[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
 
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
+            
+            
+            
+            // If paused
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
+                [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
+                
+                if(didJustPause){
+                    pauseBegan=[NSDate date];
+                    didJustPause=FALSE;
+                    thisPauseTime=0;
+                }
+                thisPauseTime=[[NSDate date] timeIntervalSinceDate:pauseBegan];
+                didJustUnpause=TRUE;
+                
+            // Playback...
+            }else{
+                didJustPause=TRUE;
+                
+                if(didJustUnpause){
+                    
+                    overallPauseTime=overallPauseTime+thisPauseTime;
+                    didJustUnpause=FALSE;
+                }
                 [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
                 
             
                 // Out of range
                 if (logPointer >= [[[AppCommon sharedAppCommon] input_oscFromLog] count] ) {
-                    
-                    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
-                    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
-                    logPointer=0;
-                    logBegins=nil;
-                    playbackBegan=nil;
-                    
-                    // Set playback duration
-                    [[AppCommon sharedAppCommon] setPlaybackDuration:[duration_df stringFromDate:[NSDate dateWithTimeInterval:0 sinceDate:[NSDate date]]]];
-
+                    [self playback_off];
                     
                     // Are we looping?
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
-                        [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
+                        [self playback_on];
                     }
                     return;
                 }
         
-
-                NSArray *logEntry = [[AppCommon sharedAppCommon] input_oscFromLog][logPointer];
+                // Grab the entry from the log
                 NSDate *now = [NSDate date];
+                NSArray *logEntry = [[AppCommon sharedAppCommon] input_oscFromLog][logPointer];
                 NSDate *logEntryTimeStamp = [NSDate dateWithTimeIntervalSince1970:[logEntry[0] doubleValue]];
                 
-                // First entry in the log
+                // If this is the first time through
                 if(!logBegins){
                     logBegins=logEntryTimeStamp;
                     lastVisitedLog = now;
@@ -178,7 +217,7 @@
                 }
 
                 // Overall time and when event should occur
-                NSTimeInterval overallTimeElapsed=[now timeIntervalSinceDate:playbackBegan];
+                NSTimeInterval overallTimeElapsed=[now timeIntervalSinceDate:playbackBegan]-overallPauseTime;
                 NSTimeInterval timeEventShouldOccurAt=[logEntryTimeStamp timeIntervalSinceDate:logBegins];
 
                 if (overallTimeElapsed >= timeEventShouldOccurAt){
@@ -187,16 +226,20 @@
                 }
                 
                 // Set playback duration
-                [[AppCommon sharedAppCommon] setPlaybackDuration:[duration_df stringFromDate:[NSDate dateWithTimeInterval:overallTimeElapsed sinceDate:playbackBegan]]];
+                [[AppCommon sharedAppCommon] setPlaybackDuration:[self stringFromTimeInterval:overallTimeElapsed]];
 
-
-            }else{
-                [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
             }
         }
     }
 }
 
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
+    NSInteger ti = (NSInteger)interval;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600);
+    return [NSString stringWithFormat:@"%02li:%02li:%02li", (long)hours, (long)minutes, (long)seconds];
+}
 
 -(void)sendLogEntry:(NSArray *)logEntry{
 
