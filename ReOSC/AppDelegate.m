@@ -34,6 +34,30 @@
 }
 
 
+- (IBAction)openFile:(id)sender {
+    NSOpenPanel* dlg =[NSOpenPanel openPanel];
+    [dlg setCanChooseFiles:YES];
+    [dlg setCanChooseDirectories:YES];
+    [dlg runModal];
+    
+    
+    NSMutableArray* paths=[[NSMutableArray alloc] init];
+    NSURL *chosenURL = [[dlg URLs] objectAtIndex:0];
+    NSLog(@"%@",[chosenURL absoluteString]);
+    
+    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:chosenURL];
+
+    for(NSURL* url in [dlg URLs]){
+        [paths addObject:url.path];
+    }
+    [[AppCommon sharedAppCommon] loadLogFileFromPath:paths];
+
+    
+}
+
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename{
+    return YES;
+}
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{

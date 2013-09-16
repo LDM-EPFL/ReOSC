@@ -41,27 +41,38 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
     if ([[AppCommon sharedAppCommon] showLoadProgress]){
         return NO;
     }
-    
-    [[AppCommon sharedAppCommon] setPlaybackAvailable:FALSE];
-    
+        
     NSPasteboard* pbrd = [sender draggingPasteboard];
     NSArray *draggedFilePaths = [pbrd propertyListForType:NSFilenamesPboardType];
-    NSString *path=draggedFilePaths[0];
+    return [self loadLogFileFromPath:draggedFilePaths];
+    
+}
+
+-(BOOL)loadLogFileFromPath:(NSArray*)draggedFilePaths{
+    [[AppCommon sharedAppCommon] setPlaybackAvailable:FALSE];
+    
+    NSLog(@"%@",draggedFilePaths);
+    
+    NSString *path;
     NSString *fileExt;
+    NSString* fileName;
     
-    
-    // You could drop a .log file...
+    // You could drop a .log or .tlog file...
     NSMutableArray *logfiles=[[NSMutableArray alloc] init];
     if([[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"log"] ||
        [[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject]isEqualToString:@"tlog"]){
         [logfiles addObject:[draggedFilePaths[0] lastPathComponent]];
         path = [draggedFilePaths[0] stringByDeletingLastPathComponent];
         fileExt=[[[draggedFilePaths[0] lastPathComponent] componentsSeparatedByString:@"."] lastObject];
+
+        fileName=[draggedFilePaths[0] lastPathComponent];
         
     // Or a directory full of .log
     }else{
+        path = draggedFilePaths[0];
         NSArray *dirFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
         logfiles = (NSMutableArray*)[dirFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.log'"]];
+        fileName=[[path componentsSeparatedByString:@"/"] lastObject];
     }
     
     
@@ -80,8 +91,9 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         [[AppCommon sharedAppCommon] setDropLoadProgressValue:0.0];
         [[AppCommon sharedAppCommon] setShowLoadProgress:TRUE];
         [[AppCommon sharedAppCommon] setCancelLoad:FALSE];
-        
+       
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
             float fileCount=1;
             for (NSString *file in logfiles) {
                 
@@ -160,7 +172,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                         
                         [[AppCommon sharedAppCommon] setPlaybackAvailable:TRUE];
                         
-                        NSString* fileName=[[path componentsSeparatedByString:@"/"] lastObject];
+                        
                         [[AppCommon sharedAppCommon]setInput_filename:fileName];
                         [[AppCommon sharedAppCommon]setInput_fullFilePath:path];
                         [[AppCommon sharedAppCommon]setInput_entryCount:[NSString stringWithFormat:@"%li events",(unsigned long)[entireLog count]]];

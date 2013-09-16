@@ -23,6 +23,6 @@
 // Model alert on a sheet
 +(void)alertUserOnWindow:(NSWindow*)displayWindow alertTitle:(NSString*)alertTitle info:(NSString*)alertMessage;
 
-
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename;
 
 @end

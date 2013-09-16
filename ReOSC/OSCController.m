@@ -232,7 +232,6 @@
             }
         }
     }
-    //[NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
 }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
@@ -457,8 +456,12 @@
         if(!isSendingOSC){
             NSString* listOfDestinations = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendList"];
             [[NSUserDefaults standardUserDefaults] setValue:[listOfDestinations stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"osc_sendList"];
-            NSArray* arrayOfInputs = [listOfDestinations componentsSeparatedByString:@","];
-            NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas to separate them.";
+            
+            NSString *sep = @", ";
+            NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:sep];
+            
+            NSArray* arrayOfInputs = [listOfDestinations componentsSeparatedByCharactersInSet:set];
+            NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas or spaces to separate them.";
             
             // No output specified
             if([listOfDestinations length] == 0){
@@ -469,16 +472,22 @@
             
             for(NSString* possibleAddress in arrayOfInputs){
                 NSString* possibleAddressTrimmed = [possibleAddress stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                NSArray* outputAddress = [possibleAddressTrimmed componentsSeparatedByString:@":"];
+                
+                if([possibleAddressTrimmed length]>0){
 
-                if([outputAddress count] < 2){
-                    [AppDelegate alertUser:@"Malformed Address" info:[NSString stringWithFormat:@"I don't know how to send to %@\n\n%@",possibleAddress,addressMessage]];
-                    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
-                }else{
-                    NSString* oscIP = outputAddress[0];
-                    double oscPort = [outputAddress[1] doubleValue];
-                    OSCOutPort *newOSCOutput = [myOSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
-                    [myOSCOutputs addObject:newOSCOutput];
+                    
+                    NSLog(@"-%@-",possibleAddressTrimmed);
+                    NSArray* outputAddress = [possibleAddressTrimmed componentsSeparatedByString:@":"];
+
+                    if([outputAddress count] < 2){
+                        [AppDelegate alertUser:@"Malformed Address" info:[NSString stringWithFormat:@"I don't know how to send to %@\n\n%@",possibleAddress,addressMessage]];
+                        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_send"];
+                    }else{
+                        NSString* oscIP = outputAddress[0];
+                        double oscPort = [outputAddress[1] doubleValue];
+                        OSCOutPort *newOSCOutput = [myOSCmanagerObject createNewOutputToAddress:oscIP atPort:oscPort];
+                        [myOSCOutputs addObject:newOSCOutput];
+                    }
                 }
             }
         }

@@ -39,6 +39,7 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 @property NSMutableArray* input_oscFromLog;
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender;
+-(BOOL)loadLogFileFromPath:(NSArray*)draggedFilePaths;
 
 @end
 
