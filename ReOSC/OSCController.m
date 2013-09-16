@@ -52,7 +52,7 @@
     [duration_df setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     
     mainTimer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:mainTimer forMode:NSEventTrackingRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:mainTimer forMode:NSDefaultRunLoopMode];
     
  
 }
@@ -63,6 +63,7 @@
     [self setupOSCOutput];
     [self flushRecordBuffer];
     //[self playbackRecording];
+    [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
 }
 
 // Play button clicked
@@ -90,7 +91,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
     
     playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1/30 target:self selector:@selector(playbackFrame) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:playbackTimer forMode:NSEventTrackingRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:playbackTimer forMode:NSDefaultRunLoopMode];
     
     logDatePointer=nil;
     didJustPause=TRUE;
@@ -231,6 +232,7 @@
             }
         }
     }
+    [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
 }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {

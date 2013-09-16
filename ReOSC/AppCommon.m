@@ -110,7 +110,6 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                     NSString* fileContents=[NSString stringWithContentsOfFile:fileToRead encoding:NSUTF8StringEncoding error:nil];
                     NSArray* fileLines = [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
                     for(NSString* line in fileLines){
-                        NSLog(line);
                         [array addObject:line];
                     }
                     
