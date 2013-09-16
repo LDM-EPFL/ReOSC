@@ -232,7 +232,7 @@
             }
         }
     }
-    [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
+    //[NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
 }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
