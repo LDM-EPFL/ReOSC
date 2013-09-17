@@ -13,6 +13,7 @@
 
 @interface OSCController : NSView{
     
+    BOOL isRecording;
     BOOL isSendingOSC;
     OSCManager *myOSCmanagerObject;
     NSMutableArray *myOSCOutputs;

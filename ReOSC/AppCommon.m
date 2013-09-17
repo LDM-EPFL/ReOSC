@@ -22,6 +22,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         _statusLight_playback=[NSColor grayColor];
         _statusLight_recording=[NSColor grayColor];
         _playbackTimeElapsed=0;
+        _recordTimeElapsed=0;
         _playbackAvailable=FALSE;
     }
     return self;

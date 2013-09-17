@@ -53,7 +53,7 @@
     
     mainTimer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:mainTimer forMode:NSDefaultRunLoopMode];
-    
+    isRecording=NO;
  
 }
 
@@ -62,27 +62,28 @@
     [self setupOSCInput];
     [self setupOSCOutput];
     [self flushRecordBuffer];
-    //[self playbackRecording];
+    
+    // Update record timer
+    if(isRecording){
+        NSTimeInterval recordTime=[[NSDate date] timeIntervalSinceDate:[[AppCommon sharedAppCommon] recordingBegan]];;
+        [[AppCommon sharedAppCommon] setRecordDuration:[self stringFromTimeInterval:recordTime]];
+    }else{
+          [[AppCommon sharedAppCommon] setRecordDuration:@"00:00:00"];
+    }
+    
     [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
 }
 
 // Play button clicked
 - (IBAction)playButton:(id)sender {
-    
-    
-    // Playback ON
     if([sender state] == NSOnState){
-
         [self playback_on];
-    
-        
-    // Playback OFF
     }else{
         [self playback_off];
     }
-
 }
 
+// Playback ON
 -(void)playback_on{
     [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
     
@@ -98,9 +99,9 @@
     didJustPause=TRUE;
     didJustUnpause=FALSE;
     overallPauseTime=0;
-
-
 }
+
+// Playback OFF
 -(void)playback_off{
     [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
@@ -113,32 +114,26 @@
     logBegins=nil;
     playbackBegan=nil;
     
-    
     // Set playback duration
     [[AppCommon sharedAppCommon] setPlaybackDuration:0];
 
- 
 }
 
-// Record button clicked
-- (IBAction)recordButton:(id)sender{
-
-    // Recording ON
-    if([sender state] == NSOnState){
+-(BOOL)recording_on{
+    
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"b_listen"]){
+        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
+        [AppDelegate alertUser:@"Nothing to record!" info:@"Turn on listening first."];
+        return NO;
         
-        if(![[NSUserDefaults standardUserDefaults] boolForKey:@"b_listen"]){
-            [sender setState:NSOffState];
-            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
-            
-            [AppDelegate alertUser:@"Nothing to record!" info:@"Turn on listening first."];
-        }else{
+    }else{
         
         //NSLog(@"Recording on...");
-        
+        isRecording=YES;
         // Base path where recordings live
         recordingPath=nil;
         NSString* basePath = [[NSUserDefaults standardUserDefaults] valueForKey:@"recordingBasepath"];
-
+        
         // If recording path is blank, set default
         if([basePath length] == 0){
             basePath = [NSString stringWithFormat:@"%@/Desktop/%@",NSHomeDirectory(),[[NSProcessInfo processInfo] processName]];
@@ -150,33 +145,42 @@
         NSFileManager *fileManager= [NSFileManager defaultManager];
         BOOL isDirectory;
         if(![fileManager fileExistsAtPath:basePath isDirectory:&isDirectory]){
-            [sender setState:NSOffState];
             [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
-             [AppDelegate alertUser:@"Cannot Record!" info:[NSString stringWithFormat:@"Destination directory does not exist:\n%@",basePath]];
-            return;
+            [AppDelegate alertUser:@"Cannot Record!" info:[NSString stringWithFormat:@"Destination directory does not exist:\n%@",basePath]];
+            return NO;
         }
-            
-            
-       
-                [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor redColor]];
-         }
+        
+        [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor redColor]];
+        [[AppCommon sharedAppCommon] setRecordDuration:@"00:00:00"];
+        [[AppCommon sharedAppCommon] setRecordingBegan:[NSDate date]];
+    }
     
-    // Recording OFF
+    return YES;
+}
+
+-(void)recording_off{
+    isRecording=NO;
+    [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor grayColor]];
+    //NSLog(@"Recording off...");
+    [[AppCommon sharedAppCommon] setRecordDuration:@"00:00:00"];
+    
+    //NSLog(@"OUT: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
+    if([recordBuffer count] == 0){
+        [AppDelegate alertUser:@"Not saving" info:@"No data was received, there's nothing to save!"];
+    }
+    
+    [self flushRecordBufferForce:YES openOnCompletion:YES];
+    [recordBuffer removeAllObjects];
+
+}
+
+// Record button clicked
+- (IBAction)recordButton:(id)sender{
+    if([sender state] == NSOnState){
+        BOOL success = [self recording_on];
+        if(!success){[sender setState:NSOffState];}
     }else{
-        [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor grayColor]];
-        //NSLog(@"Recording off...");
-        
-        
-        
-
-        //NSLog(@"OUT: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
-        if([recordBuffer count] == 0){
-            [AppDelegate alertUser:@"Not saving" info:@"No data was received, there's nothing to save!"];
-        }
-
-        [self flushRecordBufferForce:YES openOnCompletion:YES];
-        [recordBuffer removeAllObjects];
-        
+        [self recording_off];
     }
 }
 

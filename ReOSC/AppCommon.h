@@ -39,6 +39,9 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 @property BOOL showLoadProgress;
 @property NSTimeInterval playbackTimeElapsed;
 @property NSString* playbackDuration;
+@property NSDate* recordingBegan;
+@property NSTimeInterval recordTimeElapsed;
+@property NSString* recordDuration;
 @property NSMutableArray* input_oscFromLog;
 
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender;
