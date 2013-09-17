@@ -196,6 +196,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         });
     }
 
+    // Add to recent files menu
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
     return YES;
 }

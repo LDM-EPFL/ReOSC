@@ -171,7 +171,7 @@
 
         //NSLog(@"OUT: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
         if([recordBuffer count] == 0){
-            [AppDelegate alertUser:@"Not saving" info:@"No data was recieved, there's nothing to save!"];
+            [AppDelegate alertUser:@"Not saving" info:@"No data was received, there's nothing to save!"];
         }
 
         [self flushRecordBufferForce:YES openOnCompletion:YES];
@@ -486,10 +486,8 @@
             NSString* listOfDestinations = [[NSUserDefaults standardUserDefaults] valueForKey:@"osc_sendList"];
             [[NSUserDefaults standardUserDefaults] setValue:[listOfDestinations stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:@"osc_sendList"];
             
-            NSString *sep = @", ";
-            NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:sep];
             
-            NSArray* arrayOfInputs = [listOfDestinations componentsSeparatedByCharactersInSet:set];
+            NSArray* arrayOfInputs = [listOfDestinations componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@", "]];
             NSString* addressMessage = @"You should provide at least one outgoing address in the format IP:PORT (IE: 127.0.0.1:8888)\n\nYou may provide more than one address, use commas or spaces to separate them.";
             
             // No output specified
