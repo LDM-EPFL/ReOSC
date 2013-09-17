@@ -85,6 +85,7 @@
 
 -(void)playback_on{
     [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"b_play"];
+    
     // Turn off listen and record
     [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor greenColor]];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
@@ -101,7 +102,7 @@
 
 }
 -(void)playback_off{
-    [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor grayColor]];
+    [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
     [[AppCommon sharedAppCommon] setPlaybackDuration:0];
     [playbackTimer invalidate];
@@ -125,8 +126,14 @@
     // Recording ON
     if([sender state] == NSOnState){
         
+        if(![[NSUserDefaults standardUserDefaults] boolForKey:@"b_listen"]){
+            [sender setState:NSOffState];
+            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
+            
+            [AppDelegate alertUser:@"Nothing to record!" info:@"Turn on listening first."];
+        }else{
         
-        NSLog(@"Recording on...");
+        //NSLog(@"Recording on...");
         
         // Base path where recordings live
         recordingPath=nil;
@@ -139,22 +146,36 @@
         
         [[NSUserDefaults standardUserDefaults] setValue:basePath forKey:@"recordingBasepath"];
         
-        // Init directory so it's present
-        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-        NSLog(@"IN: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
+        // Check to see if directory exists
+        NSFileManager *fileManager= [NSFileManager defaultManager];
+        BOOL isDirectory;
+        if(![fileManager fileExistsAtPath:basePath isDirectory:&isDirectory]){
+            [sender setState:NSOffState];
+            [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
+             [AppDelegate alertUser:@"Cannot Record!" info:[NSString stringWithFormat:@"Destination directory does not exist:\n%@",basePath]];
+            return;
+        }
+            
+            
+       
+                [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor redColor]];
+         }
     
     // Recording OFF
     }else{
-        NSLog(@"Recording off...");
-        if([recordBuffer count] == 0){
-            [AppDelegate alertUser:@"Nothing to log" info:@"Not saving anything because no data was recieved!"];
-        }
+        [[AppCommon sharedAppCommon] setStatusLight_recording:[NSColor grayColor]];
+        //NSLog(@"Recording off...");
         
-        [self flushRecordBuffer:YES];
-        [recordBuffer removeAllObjects];
-        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-        NSLog(@"OUT: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
+        
+        
 
+        //NSLog(@"OUT: %@,",[NSString stringWithFormat:@"%.25f",timeStamp]);
+        if([recordBuffer count] == 0){
+            [AppDelegate alertUser:@"Not saving" info:@"No data was recieved, there's nothing to save!"];
+        }
+
+        [self flushRecordBufferForce:YES openOnCompletion:YES];
+        [recordBuffer removeAllObjects];
         
     }
 }
@@ -291,10 +312,10 @@
 
 // Flush the buffer to disk (threaded so we don't slow down logging)
 -(void)flushRecordBuffer{
-    [self flushRecordBuffer:NO];
+    [self flushRecordBufferForce:NO openOnCompletion:NO];
 }
 
--(void)flushRecordBuffer:(bool)force{
+-(void)flushRecordBufferForce:(BOOL)force openOnCompletion:(bool)shouldOpen{
         
     // If we should flush now
     if(force || ([recordBuffer count] > flushBufferAt)){
@@ -309,7 +330,7 @@
             [ [ NSFileManager defaultManager ] createDirectoryAtPath: recordPath_withSubdir withIntermediateDirectories: YES attributes: nil error: NULL ];
             
             recordingPath=recordPath_withSubdir;
-            NSLog(@"Recording to: %@",recordingPath);
+            //NSLog(@"Recording to: %@",recordingPath);
         }
         
         
@@ -396,6 +417,14 @@
             if ([error localizedDescription]){
                 NSLog(@"ERROR!: Error writing log to disk %@", [error localizedDescription]);
             }
+            
+            
+            // Callback
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(shouldOpen){
+                    [[AppCommon sharedAppCommon] loadLogFileFromPath:[NSArray arrayWithObject:recordingPath]];
+                }
+            });
 
         });
     }
@@ -429,7 +458,7 @@
          [[AppCommon sharedAppCommon] setValue:[NSColor orangeColor] forKey:@"statusLight"];
          if(!inPort){
              int listenPort=(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"];
-             NSLog(@"OSC: Bind to port: %i",listenPort);
+             //NSLog(@"OSC: Bind to port: %i",listenPort);
              [myOSCmanagerObject deleteAllInputs];
              inPort = [myOSCmanagerObject createNewInputForPort:listenPort];
                  
@@ -476,7 +505,7 @@
                 if([possibleAddressTrimmed length]>0){
 
                     
-                    NSLog(@"-%@-",possibleAddressTrimmed);
+                   // NSLog(@"-%@-",possibleAddressTrimmed);
                     NSArray* outputAddress = [possibleAddressTrimmed componentsSeparatedByString:@":"];
 
                     if([outputAddress count] < 2){

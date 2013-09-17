@@ -17,16 +17,17 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
 
 - (id)init{
     if (self = [super init]){
-        _playbackAvailable=false;
+        self.playbackAvailable=false;
         _statusLight=[NSColor grayColor];
         _statusLight_playback=[NSColor grayColor];
+        _statusLight_recording=[NSColor grayColor];
         _playbackTimeElapsed=0;
+        _playbackAvailable=FALSE;
     }
     return self;
 }
 
 - (void)setNilValueForKey:(NSString*)key{
-    
     if ([key isEqualToString:@"showLoadProgress"]){
         self.showLoadProgress = FALSE;
         return;
@@ -34,28 +35,39 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
 }
 
 
+// Keep light in synch with playbackAvailable
+-(BOOL)playbackAvailable{return _playbackAvailable;}
+-(void)setPlaybackAvailable:(BOOL)playbackAvailable{
+    _playbackAvailable=playbackAvailable;
+    if(_playbackAvailable){
+        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
+    }else{
+        [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor grayColor]];
+    }
+}
+
 // Accept drag and drop
 -(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
     
     // If load is in progress don't accept another one
-    if ([[AppCommon sharedAppCommon] showLoadProgress]){
-        return NO;
-    }
-        
+    if ([[AppCommon sharedAppCommon] showLoadProgress]){return NO;}
+    
+    // Accept drop and pass path to load
     NSPasteboard* pbrd = [sender draggingPasteboard];
     NSArray *draggedFilePaths = [pbrd propertyListForType:NSFilenamesPboardType];
     return [self loadLogFileFromPath:draggedFilePaths];
     
 }
 
+// Load logs from a path
 -(BOOL)loadLogFileFromPath:(NSArray*)draggedFilePaths{
-    [[AppCommon sharedAppCommon] setPlaybackAvailable:FALSE];
-    
-    NSLog(@"%@",draggedFilePaths);
-    
+
     NSString *path;
     NSString *fileExt;
     NSString* fileName;
+    
+    // Playback off while we load
+    [[AppCommon sharedAppCommon] setPlaybackAvailable:FALSE];
     
     // You could drop a .log or .tlog file...
     NSMutableArray *logfiles=[[NSMutableArray alloc] init];
@@ -72,7 +84,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         path = draggedFilePaths[0];
         NSArray *dirFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
         logfiles = (NSMutableArray*)[dirFiles filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self ENDSWITH '.log'"]];
-        fileName=[[path componentsSeparatedByString:@"/"] lastObject];
+        fileName=[path lastPathComponent];
     }
     
     
@@ -152,33 +164,30 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
                 // Hide progress bar
                 [[AppCommon sharedAppCommon] setValue:FALSE forKey:@"showLoadProgress"];
 
-                 // Cancel!
+                 // If we didn't cancel...
                  if(![[AppCommon sharedAppCommon] cancelLoad]){
                      
-                     // Do some analysis
+                    // Display info about this log
                     if (haveLogToProcess){
                         NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[entireLog objectAtIndex:0][0] doubleValue]];
                         NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[entireLog lastObject][0] doubleValue]];
                         
                         NSTimeInterval duration = [endDate timeIntervalSinceDate:startDate];
                         NSDate *durationDate = [NSDate dateWithTimeIntervalSince1970:duration];
+                        
                         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                        [dateFormatter setDateFormat:@"HH:mm:ss.SS"];
+                        [dateFormatter setDateFormat:@"HH:mm:ss"];
                         [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
                         
                         NSDateFormatter *format = [[NSDateFormatter alloc] init];
-                        
-                        [format setDateFormat:@"MMM dd, yyyy HH:mm:ss.SS"];
+                        [format setDateFormat:@"MMM dd, yyyy @ HH:mm a"];
                         
                         [[AppCommon sharedAppCommon] setPlaybackAvailable:TRUE];
-                        
-                        
                         [[AppCommon sharedAppCommon]setInput_filename:fileName];
                         [[AppCommon sharedAppCommon]setInput_fullFilePath:path];
                         [[AppCommon sharedAppCommon]setInput_entryCount:[NSString stringWithFormat:@"%li events",(unsigned long)[entireLog count]]];
-                        [[AppCommon sharedAppCommon]setInput_duration:[dateFormatter stringFromDate:durationDate]];
+                        [[AppCommon sharedAppCommon]setInput_duration:[NSString stringWithFormat:@"%@ (hours:min:sec)",[dateFormatter stringFromDate:durationDate]]];
                         [[AppCommon sharedAppCommon]setInput_timeStamp:[NSString stringWithFormat:@"%@",[format stringFromDate:startDate]]];
-                        
                         [[AppCommon sharedAppCommon] setInput_oscFromLog:entireLog];
                     }
                  }
@@ -187,7 +196,7 @@ CWL_SYNTHESIZE_SINGLETON_FOR_CLASS(AppCommon);
         });
     }
 
-    
+    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
     return YES;
 }
 

@@ -13,7 +13,9 @@
 #import "CWLSynthesizeSingleton.h"
 @class BigFontView;
 
-@interface AppCommon : NSObject{}
+@interface AppCommon : NSObject{
+    BOOL _playbackAvailable;
+}
 CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 
 // Custom properties for this ap
@@ -31,6 +33,7 @@ CWL_DECLARE_SINGLETON_FOR_CLASS(AppCommon)
 
 @property NSColor*  statusLight;
 @property NSColor*  statusLight_playback;
+@property NSColor*  statusLight_recording;
 
 @property BOOL cancelLoad;
 @property BOOL showLoadProgress;

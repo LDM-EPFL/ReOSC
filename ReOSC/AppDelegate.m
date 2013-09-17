@@ -16,6 +16,51 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize managedObjectContext = _managedObjectContext;
 
+
+// ApplicationDidFinishLaunching
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
+    [[AppCommon sharedAppCommon] setMainWindow:_window];
+}
+
+
+// Button: Select a destination for logfiles
+- (IBAction)selectSaveDestination:(id)sender {
+    NSOpenPanel* dlg =[NSOpenPanel openPanel];
+
+    [dlg setPrompt:@"Choose"];
+    [dlg setCanChooseFiles:NO];
+    [dlg setCanChooseDirectories:YES];
+    [dlg runModal];
+
+    NSString *path = [[[dlg URLs] objectAtIndex:0] path];
+    [[NSUserDefaults standardUserDefaults] setValue:path forKey:@"recordingBasepath"];
+}
+
+
+// Menu: File/Open
+- (IBAction)openFile:(id)sender {
+    NSOpenPanel* dlg =[NSOpenPanel openPanel];
+    [dlg setCanChooseFiles:YES];
+    [dlg setCanChooseDirectories:YES];
+    [dlg runModal];
+    
+    // Converty URLS to an array of paths and send to open
+    NSMutableArray* paths=[[NSMutableArray alloc] init];
+    for(NSURL* url in [dlg URLs]){
+        [paths addObject:url.path];
+    }
+    [[AppCommon sharedAppCommon] loadLogFileFromPath:paths];
+}
+
+// Menu: File/Open Recent
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename{
+    //defaults write NSGlobalDomain NSRecentDocumentsLimit 20
+    [[AppCommon sharedAppCommon] loadLogFileFromPath:[NSArray arrayWithObject:filename]];
+    return YES;
+}
+
+
+// Alerts
 // Pop up an alert
 +(void)alertUser:(NSString*)alertTitle info:(NSString*)alertMessage{
     [self alertUserOnWindow:[[AppCommon sharedAppCommon] mainWindow]
@@ -34,35 +79,9 @@
 }
 
 
-- (IBAction)openFile:(id)sender {
-    NSOpenPanel* dlg =[NSOpenPanel openPanel];
-    [dlg setCanChooseFiles:YES];
-    [dlg setCanChooseDirectories:YES];
-    [dlg runModal];
-    
-    
-    NSMutableArray* paths=[[NSMutableArray alloc] init];
-    NSURL *chosenURL = [[dlg URLs] objectAtIndex:0];
-    NSLog(@"%@",[chosenURL absoluteString]);
-    
-    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:chosenURL];
 
-    for(NSURL* url in [dlg URLs]){
-        [paths addObject:url.path];
-    }
-    [[AppCommon sharedAppCommon] loadLogFileFromPath:paths];
+// Apple boilerplate below //////////////////////////////////////////////////////////////////////////////
 
-    
-}
-
-- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename{
-    return YES;
-}
-
-
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
-    [[AppCommon sharedAppCommon] setMainWindow:_window];
-}
 
 // Returns the directory the application uses to store the Core Data store file. This code uses a directory named "feralresearch.org.ReOSC" in the user's Application Support directory.
 - (NSURL *)applicationFilesDirectory
@@ -166,8 +185,7 @@
 }
 
 // Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.
-- (IBAction)saveAction:(id)sender
-{
+- (IBAction)saveAction:(id)sender{
     NSError *error = nil;
     
     if (![[self managedObjectContext] commitEditing]) {
