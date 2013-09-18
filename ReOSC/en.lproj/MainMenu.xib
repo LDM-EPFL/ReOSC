@@ -1971,7 +1971,7 @@
 										<object class="NSTextField" id="623222970">
 											<reference key="NSNextResponder" ref="359097280"/>
 											<int key="NSvFlags">268</int>
-											<string key="NSFrame">{{16, 41}, {140, 11}}</string>
+											<string key="NSFrame">{{16, 41}, {98, 11}}</string>
 											<reference key="NSSuperview" ref="359097280"/>
 											<reference key="NSWindow"/>
 											<reference key="NSNextKeyView" ref="81773097"/>
@@ -1980,7 +1980,7 @@
 											<object class="NSTextFieldCell" key="NSCell" id="994007029">
 												<int key="NSCellFlags">68157504</int>
 												<int key="NSCellFlags2">4195328</int>
-												<string key="NSContents">Recorded logs will be saved to:</string>
+												<string key="NSContents">Logs will be saved to:</string>
 												<reference key="NSSupport" ref="821556790"/>
 												<string key="NSCellIdentifier">_NS:1535</string>
 												<reference key="NSControlView" ref="623222970"/>
@@ -2215,7 +2215,7 @@
 						<object class="NSProgressIndicator" id="89818150">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{50, 261}, {403, 12}}</string>
+							<string key="NSFrame">{{50, 261}, {408, 12}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="802674218"/>
