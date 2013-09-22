@@ -30,6 +30,7 @@
     [dlg setPrompt:@"Choose"];
     [dlg setCanChooseFiles:NO];
     [dlg setCanChooseDirectories:YES];
+    [dlg setCanCreateDirectories:YES];
     [dlg runModal];
 
     NSString *path = [[[dlg URLs] objectAtIndex:0] path];
