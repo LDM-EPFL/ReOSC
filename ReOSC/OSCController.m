@@ -225,6 +225,7 @@
                     
                     // Are we looping?
                     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_loopPlayback"]){
+                        [[AppCommon sharedAppCommon] setPlaybackDuration:0];
                         [self playback_on];
                     }
                     return;
