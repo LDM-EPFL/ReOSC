@@ -20,6 +20,12 @@
 // ApplicationDidFinishLaunching
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification{
     [[AppCommon sharedAppCommon] setMainWindow:_window];
+    
+    NSLog(@"Disabling AppNap...");
+    //[[NSProcessInfo processInfo] disableAutomaticTermination:@"Good Reason"];
+    if ([[NSProcessInfo processInfo] respondsToSelector:@selector(beginActivityWithOptions:reason:)]) {
+        self.activity = [[NSProcessInfo processInfo] beginActivityWithOptions:0x00FFFFFF reason:@"receiving OSC messages"];
+    }
 }
 
 

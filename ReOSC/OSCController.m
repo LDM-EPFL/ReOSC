@@ -71,7 +71,7 @@
           [[AppCommon sharedAppCommon] setRecordDuration:@"00:00:00"];
     }
     
-    [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: .01]];
+    [NSThread sleepUntilDate: [[NSDate date] dateByAddingTimeInterval: .01]];
 }
 
 // Play button clicked
