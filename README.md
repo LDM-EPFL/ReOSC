@@ -1,8 +1,16 @@
+**-----> [Download Binaries](https://bitbucket.org/tezcatlipoca/reosc/downloads) <----- **
+
+NOTE: This is early stage alpha software under active development - it is missing several features and may crash at any time.  
+  
+
 ReOSC
 ====================
 OSC Repeater with record and playback
 
-NOTE: This is early stage alpha software under active development - it is missing several features and may crash at any time.
+This software was developed as part of my PhD work [*Building Consciousness*](http://andrewsempere.org/buildingConsciousness).  
+
+Sourcecode is released with the MIT License so you may re-use at will, but let me know if you do something neat?
+
 
 License
 ====================
