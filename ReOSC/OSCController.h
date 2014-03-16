@@ -46,6 +46,6 @@
 }
 
 
-@property (weak) IBOutlet NSButton *cancelButton;
-@property (weak) IBOutlet NSProgressIndicator *dropLoadProgress;
+//@property (weak) IBOutlet NSButton *cancelButton;
+//@property (weak) IBOutlet NSProgressIndicator *dropLoadProgress;
 @end

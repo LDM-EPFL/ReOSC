@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D5ED6954-6F17-407E-A157-B884AB296A3A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ReOSC</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</key>
+		<string>ssh://bitbucket.org/tezcatlipoca/reosc.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ReOSC.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://bitbucket.org/tezcatlipoca/reosc.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ReOSC</string>
+		</dict>
+	</array>
+</dict>
+</plist>
