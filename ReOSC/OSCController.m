@@ -52,19 +52,17 @@
     [duration_df setDateFormat:@"HH:mm:ss.SS"];
     [duration_df setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
     
-    [self performSelectorInBackground:@selector(updateLoop) withObject:nil];
-   /* mainTimer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
+    //[self performSelectorInBackground:@selector(updateLoop) withObject:nil];
+    mainTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(updateLoop) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:mainTimer forMode:NSDefaultRunLoopMode];
-    */
+    
     isRecording=NO;
  
 }
 
 // Loop
 -(void)updateLoop{
-    
-   // NSLog(@"Test update loop");
-    while (1){
+
         [self setupOSCInput];
         [self setupOSCOutput];
         [self flushRecordBuffer];
@@ -76,12 +74,7 @@
         }else{
             [[AppCommon sharedAppCommon] setRecordDuration:@"00:00:00"];
         }
-        
-        //[self playbackFrame];
-        
-        [NSThread sleepUntilDate: [[NSDate date] dateByAddingTimeInterval: 0.01]];
-         
-    }
+    
 }
 
 // Play button clicked
@@ -90,7 +83,8 @@
         [self playback_on];
         
     }else{
-        isPlaying=false;
+        //isPlaying=false;
+        [self playback_off];
     }
 }
 
@@ -103,7 +97,8 @@
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_record"];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_listen"];
     
-    /*playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(playbackFrame) userInfo:nil repeats:YES];
+    /* OLD METHOD : caused flicker in the output points
+    playbackTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(playbackFrame) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:playbackTimer forMode:NSDefaultRunLoopMode];
     */
     
@@ -203,9 +198,8 @@
 
 
 -(void)playbackFrame{
-   
+    
     while (isPlaying){
-         //NSLog(@"play");
         
         // Default sleep value : it will be changed if the playback is activated
         customSleep = 0.01;
@@ -217,7 +211,7 @@
             if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_play"]){
                 
                 
-                customSleep = 0.00;
+                customSleep = 0.0;
                 
                 // If paused
                 if ([[NSUserDefaults standardUserDefaults] boolForKey:@"b_pause"]){
@@ -270,12 +264,12 @@
                     // Overall time and when event should occur
                     NSTimeInterval overallTimeElapsed=[now timeIntervalSinceDate:playbackBegan]-overallPauseTime;
                     NSTimeInterval timeEventShouldOccurAt=[logEntryTimeStamp timeIntervalSinceDate:logBegins];
-                    NSLog(@"Time elapsed : %f / next event : %f", overallTimeElapsed, timeEventShouldOccurAt);
+                    //NSLog(@"Time elapsed : %f / next event : %f", overallTimeElapsed, timeEventShouldOccurAt);
                     if (overallTimeElapsed >= timeEventShouldOccurAt){
                         [self sendLogEntry:logEntry];
                         logPointer++;
                     } else {
-                        NSLog(@"Custom time !");
+                        //NSLog(@"Custom time !");
                         customSleep = timeEventShouldOccurAt-overallTimeElapsed;
                     }
                     
@@ -285,7 +279,7 @@
                 }
             }
         }
-        NSLog(@"%f",customSleep);
+        //NSLog(@"%f",customSleep);
         [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: customSleep]];
     }
     NSLog(@"End of the playing loop");
@@ -500,8 +494,9 @@
              int listenPort=(int)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"];
              //NSLog(@"OSC: Bind to port: %i",listenPort);
              [myOSCmanagerObject deleteAllInputs];
+
              inPort = [myOSCmanagerObject createNewInputForPort:listenPort];
-                 
+             
              if(!inPort){
                 [AppDelegate alertUser:@"Error!" info:[NSString stringWithFormat:@"I cannot bind to port %ld. Perhaps it's in use?",(long)[[NSUserDefaults standardUserDefaults] integerForKey:@"osc_listenPort"]]];
                 

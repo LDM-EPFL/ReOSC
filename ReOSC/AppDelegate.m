@@ -235,7 +235,7 @@
         NSString *quitButton = NSLocalizedString(@"Quit anyway", @"Quit anyway button title");
         NSString *cancelButton = NSLocalizedString(@"Cancel", @"Cancel button title");
         
-        /*NSAlert *alert = [[NSAlert alloc] init];
+        NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:question];
         [alert setInformativeText:info];
         [alert addButtonWithTitle:quitButton];
@@ -246,7 +246,7 @@
         if (answer == NSAlertAlternateReturn) {
             return NSTerminateCancel;
         }
-         */
+        
     }
 
     return NSTerminateNow;
