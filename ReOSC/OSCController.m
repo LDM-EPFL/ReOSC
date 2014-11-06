@@ -116,7 +116,7 @@
     [[AppCommon sharedAppCommon] setStatusLight_playback:[NSColor orangeColor]];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
     [[AppCommon sharedAppCommon] setPlaybackDuration:0];
-    //[playbackTimer invalidate];
+    [playbackTimer invalidate];
     
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_play"];
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"b_pause"];
@@ -124,10 +124,8 @@
     logBegins=nil;
     playbackBegan=nil;
     
-    // Set playback duration
+    //Set playback duration
     [[AppCommon sharedAppCommon] setPlaybackDuration:0];
-    
-    [self playback_off];
 
 }
 
@@ -282,7 +280,7 @@
         //NSLog(@"%f",customSleep);
         [NSThread sleepUntilDate: [[NSDate date] addTimeInterval: customSleep]];
     }
-    NSLog(@"End of the playing loop");
+    //NSLog(@"End of the playing loop");
 }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
