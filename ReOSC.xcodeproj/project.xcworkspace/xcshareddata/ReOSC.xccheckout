@@ -10,29 +10,29 @@
 	<string>ReOSC</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</key>
+		<key>CDECCBB5B83B24D30C33D9874C33BF8372931038</key>
 		<string>ssh://bitbucket.org/tezcatlipoca/reosc.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>ReOSC.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</key>
+		<key>CDECCBB5B83B24D30C33D9874C33BF8372931038</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://bitbucket.org/tezcatlipoca/reosc.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</string>
+	<string>CDECCBB5B83B24D30C33D9874C33BF8372931038</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D33FAFFA-1F41-446A-ACCC-C6AD1DF0DCB4</string>
+			<string>CDECCBB5B83B24D30C33D9874C33BF8372931038</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ReOSC</string>
 		</dict>

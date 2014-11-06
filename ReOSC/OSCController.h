@@ -15,6 +15,9 @@
     
     BOOL isRecording;
     BOOL isSendingOSC;
+    BOOL isPlaying;
+    NSTimeInterval customSleep;
+    
     OSCManager *myOSCmanagerObject;
     NSMutableArray *myOSCOutputs;
     OSCInPort  *inPort;

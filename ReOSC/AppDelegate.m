@@ -77,12 +77,12 @@
 
 // Model alert on a sheet
 +(void)alertUserOnWindow:(NSWindow*)displayWindow alertTitle:(NSString*)alertTitle info:(NSString*)alertMessage{
-    NSAlert *alert = [[NSAlert alloc] init];
+    /*NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"OK"];
     [alert setMessageText:alertTitle];
     [alert setInformativeText:alertMessage];
     [alert setAlertStyle:NSWarningAlertStyle];
-    [alert beginSheetModalForWindow:displayWindow modalDelegate:self didEndSelector:nil contextInfo:nil];
+    [alert beginSheetModalForWindow:displayWindow modalDelegate:self didEndSelector:nil contextInfo:nil];*/
 }
 
 
@@ -234,7 +234,8 @@
         NSString *info = NSLocalizedString(@"Quitting now will lose any changes you have made since the last successful save", @"Quit without saves error question info");
         NSString *quitButton = NSLocalizedString(@"Quit anyway", @"Quit anyway button title");
         NSString *cancelButton = NSLocalizedString(@"Cancel", @"Cancel button title");
-        NSAlert *alert = [[NSAlert alloc] init];
+        
+        /*NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:question];
         [alert setInformativeText:info];
         [alert addButtonWithTitle:quitButton];
@@ -245,6 +246,7 @@
         if (answer == NSAlertAlternateReturn) {
             return NSTerminateCancel;
         }
+         */
     }
 
     return NSTerminateNow;
