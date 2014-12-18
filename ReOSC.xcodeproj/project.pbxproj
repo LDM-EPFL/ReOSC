@@ -177,7 +177,7 @@
 		49A6846317D8C2C00075AAD9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "FERAL RESEARCH COALITION";
 			};
 			buildConfigurationList = 49A6846617D8C2C00075AAD9 /* Build configuration list for PBXProject "ReOSC" */;
@@ -308,6 +308,7 @@
 				GCC_PREFIX_HEADER = "ReOSC/ReOSC-Prefix.pch";
 				INFOPLIST_FILE = "ReOSC/ReOSC-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = ReOSC;
 				WRAPPER_EXTENSION = app;
 			};
@@ -326,6 +327,7 @@
 				GCC_PREFIX_HEADER = "ReOSC/ReOSC-Prefix.pch";
 				INFOPLIST_FILE = "ReOSC/ReOSC-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = ReOSC;
 				WRAPPER_EXTENSION = app;
 			};
